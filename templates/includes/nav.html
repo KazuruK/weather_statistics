@@ -1,0 +1,11 @@
+<nav class="navbar navbar-dark" role="navigation" style="background-color: #343a40;">
+    <a class="navbar-brand" href="{% url 'stats:index' %}"><span style="color:#b695e8">Г</span>лавная</a>
+    <nav class="my-2 my-md-0 mr-md-3">
+        {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+                 <a class="p-2 text-light" href="/admin/" >Админ зона</a>
+                 <a class="p-2 text-light" href="{% url 'stats:load_data' %}" >Загрузить данные</a>
+            {% endif %}
+        {% endif %}
+    </nav>
+</nav>

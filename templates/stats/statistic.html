@@ -1,0 +1,84 @@
+{% extends "stats/base.html" %}
+{% block title %}Статистика по {{ city }} с {{ start_date }} по {{ end_date }}{% endblock %}
+{% block header %}Статистика по городу {{ city }} с {{ start_date }} по {{ end_date }}{% endblock %}
+{% block content %}
+<main role="main" class="container">
+  <div class="row">
+    <div class="col-md-12 mb-3 mt-1">
+      <div class="card">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <div class="h2">
+                  Температура:<br>
+            </div>
+            <div class="h4 text-muted">
+              Максимальная температура за период: {{ period_temp_max }} °C<br>
+              Минимальная температура за период: {{ period_temp_min }} °C<br>
+              Средняя температура за период: {{ period_temp_avg }} °C<br>
+              {% if years_stats != None %}
+              Средний минимум по годам: {{ years_stats.0 }} °C<br>
+              Средний максимум по годам: {{ years_stats.1 }} °C<br>
+              {% endif %}
+              {% if close_date != None %}
+                  День когда температура была наиболее близка к текущей: {{ close_date.date }} - {{ close_date.temperature }} °C
+              {% endif %}
+            </div>
+          </li>
+          <li class="list-group-item">
+              <div class="h2">
+                  Ветер:<br>
+            </div>
+            <div class="h4 text-muted">
+              Средняя скорость: {{ wind_speed_avg }} м/c <br>
+              Среднее направление: {{ wind_direction_avg }}
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="h2">
+                  Осадки:<br>
+            </div>
+            <div class="h4 text-muted">
+              Дней без осадков: {{ clear_days }}% <br>
+              {% if clear_days != 100 %}
+              Самые частые виды осадков: {{ frequent_prec }}
+              {% endif %}
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="h6 text-muted">
+              <!-- Количество записей -->
+              Записей: {{ records_count }}
+            </div>
+          </li>
+        </ul>
+      </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+<div class="h2">
+            Максимальная температура за период:
+            {{ period_temp_max }}
+          </div>
+          <div class="h2">
+            Минимальная температура за период:
+            {{ period_temp_min }}
+          </div>
+          <div class="h2">
+            Средняя температура за период:
+            {{ period_temp_avg }}
+          </div>
+          {% if years_stats != None %}
+              <div class="h2">
+                Средний минимум и максимум по годам:
+                {{ years_stats }}
+              </div>
+          {% endif %}
+          {% if close_date != None %}
+              <div class="h2">
+                Похожие на сегодня:
+                {% for day in close_date %}
+                    {{ day }}<br>
+                {% endfor %}
+              </div>
+          {% endif %}
