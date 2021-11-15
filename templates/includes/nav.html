@@ -5,6 +5,8 @@
             {% if user.is_superuser %}
                  <a class="p-2 text-light" href="/admin/" >Админ зона</a>
                  <a class="p-2 text-light" href="{% url 'stats:load_data' %}" >Загрузить данные</a>
+            {% else %}
+                <a class="p-2 text-light" href="/admin/" >Админ вход</a>
             {% endif %}
         {% endif %}
     </nav>

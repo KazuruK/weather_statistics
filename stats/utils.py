@@ -44,15 +44,25 @@ def get_temp_stats(records: QuerySet, two_year: bool, city: str):
             .aggregate(Avg('min_year'), Avg('max_year'))
         )
     try:
-        temp_today = float(requests.get(f'https://wttr.in/{city}?format=%t').text[:-2])
-        close_date = records.only('temperature').annotate(abs_diff=Func(F('temperature') - temp_today, function='ABS')).order_by('abs_diff').first()
+        temp_today = float(
+            requests.get(f'https://wttr.in/{city}?format=%t').text[:-2]
+        )
+        close_date = (
+            records.only('temperature')
+            .annotate(abs_diff=Func(
+                F('temperature') - temp_today, function='ABS'
+            ))
+            .order_by('abs_diff').first())
     except requests.exceptions.RequestException:
         close_date = None
-    return (period_stats['temperature__min'], period_stats['temperature__max'],
-            round(period_stats['temperature__avg'], 3),
-            [round(years_stats['min_year__avg'], 3),
-             round(years_stats['max_year__avg'], 3)] if two_year else None,
-            close_date)
+    return (
+        period_stats['temperature__min'],
+        period_stats['temperature__max'],
+        round(period_stats['temperature__avg'], 3),
+        [round(years_stats['min_year__avg'], 3),
+         round(years_stats['max_year__avg'], 3)] if two_year else None,
+        close_date
+    )
 
 
 def get_prec_stats(records: QuerySet):
@@ -75,4 +85,7 @@ def get_wind_stats(records: QuerySet):
         enumerate(list(WIND_DIRECTIONS.keys())),
         key=lambda x: abs(average_stats['wind_direction__avg'] - x[1])
     )[1]
-    return WIND_DIRECTIONS[direction], round(average_stats['wind_speed__avg'], 3)
+    return (
+        WIND_DIRECTIONS[direction],
+        round(average_stats['wind_speed__avg'], 3)
+    )
