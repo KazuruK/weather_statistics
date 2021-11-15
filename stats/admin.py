@@ -14,5 +14,5 @@ class RecordAdmin(admin.ModelAdmin):
     list_display = ('id', 'city', 'date', 'temperature', 'wind_direction',
                     'wind_speed', 'status', 'precipitation')
     search_fields = ('city', 'date', 'status')
-    list_filter = ('city', 'date', 'status', 'temperature')
+    list_filter = ('city', 'date', 'status')
     empty_value_display = '---'

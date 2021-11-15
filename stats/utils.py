@@ -50,8 +50,8 @@ def get_temp_stats(records: QuerySet, two_year: bool, city: str):
         close_date = None
     return (period_stats['temperature__min'], period_stats['temperature__max'],
             round(period_stats['temperature__avg'], 3),
-            [round(years_stats['min_year__avg']),
-             round(years_stats['max_year__avg'])] if two_year else None,
+            [round(years_stats['min_year__avg'], 3),
+             round(years_stats['max_year__avg'], 3)] if two_year else None,
             close_date)
 
 

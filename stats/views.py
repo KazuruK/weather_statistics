@@ -23,7 +23,7 @@ def load_data(request):
         ) as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
-                if row[1] != '':
+                if row[1] == '':
                     continue
                 temp_data.append(Record(
                     id=object_id,
