@@ -23,6 +23,21 @@ WIND_DIRECTIONS = {
 
 
 def get_statistics(records: QuerySet, years_stats: bool, city: str):
+    """
+    Gathers statistics on QuerySet from all individual methods.
+
+    **input**
+    ``records``
+        QuerySet: of :model:`stats.Record`.
+    ``years_stats``
+        Bool: which answers the question:
+        'is the sample more than two years old?'.
+    ``city``
+        String: representation of city name.
+
+    **output:**
+    List: of statistics
+    """
     results = []
     [results.append(res) for res in get_temp_stats(records, years_stats, city)]
     [results.append(res) for res in get_prec_stats(records)]
@@ -31,6 +46,34 @@ def get_statistics(records: QuerySet, years_stats: bool, city: str):
 
 
 def get_temp_stats(records: QuerySet, two_year: bool, city: str):
+    """
+    Calculates statistics on temperature in QuerySet.
+
+    **input**
+    ``records``
+        QuerySet: of :model:`stats.Record`.
+    ``two_year``
+        Bool: which answers the question:
+        'is the sample more than two years old?'.
+    ``city``
+        String: representation of city name.
+
+    **output:**
+    ''period_temp_min''
+        Float: minimum temperature for the period.
+    ''period_temp_max''
+        Float: maximum temperature for the period.
+    ''period_temp_avg''
+        Float: average temperature for the period.
+    ''years_stats''
+        List or None: of years statistics.
+            ''min_year__avg''
+                Float: of average minimum over the years.
+            ''max_year__avg''
+                Float: of average maximum over the years.
+    ''close_date''
+        Record: of day the temperature was closest to today's temperature.
+    """
     period_stats = records.aggregate(
         Min('temperature'),
         Max('temperature'),
@@ -66,6 +109,19 @@ def get_temp_stats(records: QuerySet, two_year: bool, city: str):
 
 
 def get_prec_stats(records: QuerySet):
+    """
+    Calculates statistics on precipitation in QuerySet.
+
+    **input**
+    ``records``
+        QuerySet: of :model:`stats.Record`.
+
+    **output:**
+    ''clear_days''
+        Float: percentage of clear days to all days.
+    ''frequent_prec''
+        String: of the two most frequent weather events.
+    """
     frequent_prec = list(
         records.values('status')
         .annotate(cnt=Count('status'))
@@ -80,6 +136,19 @@ def get_prec_stats(records: QuerySet):
 
 
 def get_wind_stats(records: QuerySet):
+    """
+    Calculates statistics on wind in QuerySet.
+
+    **input**
+    ``records``
+        QuerySet: of :model:`stats.Record`.
+
+    **output:**
+    ''wind_direction_avg''
+        Float: wind direction in degrees (0.0 <= wind_direction_avg <= 360.0).
+    ''wind_speed_avg''
+        Float: average wind speed.
+    """
     average_stats = records.aggregate(Avg('wind_direction'), Avg('wind_speed'))
     direction = min(
         enumerate(list(WIND_DIRECTIONS.keys())),

@@ -3,6 +3,7 @@ import datetime as dt
 import os
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import StatisticForm
@@ -10,7 +11,11 @@ from .models import City, Record
 from .utils import get_statistics
 
 
+@login_required
 def load_data(request):
+    """
+    Creating Model-Based Records :model:`stats.Record`.
+    """
     temp_data = []
     object_id = (Record.objects.latest('id').id + 1
                  if Record.objects.all().exists()
@@ -41,6 +46,13 @@ def load_data(request):
 
 
 def index(request):
+    """
+    Display the input form, in the case of a post request, displays statistics
+     :model:`stats.Record`.
+
+    **Template:**
+    :template:`templates/index.html`
+    """
     form = StatisticForm(request.POST or None)
     if form.is_valid():
         form = form.cleaned_data
